@@ -1,0 +1,8 @@
+{"ts":1371631537440,"silentsave":true,"restoring":false,"patch":[[]],"length":0}
+{"contributors":[],"silentsave":true,"ts":1371631540696,"patch":[[{"diffs":[[1,"# coding:utf-8\nimport requests\n__author__ = 'chin'\n\n\ndef main():\n    print 'hello, world'\n    pass\n\n\nif __name__ == '__main__':\n    main()"]],"start1":0,"start2":0,"length1":0,"length2":138}]],"length":138,"saved":false}
+{"contributors":[],"silentsave":true,"ts":1371631765581,"patch":[[{"diffs":[[0,"sts\n"],[-1,"__author__ = 'chin'\n"],[0,"\n\nde"]],"start1":27,"start2":27,"length1":28,"length2":8}]],"length":118,"saved":false}
+{"ts":1371631768262,"patch":[[{"diffs":[[0,"equests\n"],[1,"__author__ = 'chin'\n"],[0,"\n\ndef ma"]],"start1":23,"start2":23,"length1":16,"length2":36}]],"length":138,"saved":false}
+{"ts":1371631771789,"patch":[[{"diffs":[[0,"equests\n"],[1,"import requests\n"],[0,"__author"]],"start1":23,"start2":23,"length1":16,"length2":32},{"diffs":[[0," = '"],[-1,"chin"],[1,"swarm"],[0,"'\n\n\n"]],"start1":57,"start2":57,"length1":12,"length2":13}]],"length":155,"saved":false}
+{"ts":1371631772923,"patch":[[{"diffs":[[0,"\nimport "],[-1,"requests\n"],[0,"__author"]],"start1":30,"start2":30,"length1":25,"length2":16}]],"length":146,"saved":false}
+{"ts":1371631777701,"patch":[[{"diffs":[[0,"\nimport "],[1,"\n"],[0,"__author"]],"start1":30,"start2":30,"length1":16,"length2":17}]],"length":147,"saved":false}
+{"ts":1371631780804,"patch":[[{"diffs":[[0,"\nimport "],[1,"mechanize "],[0,"\n__autho"]],"start1":30,"start2":30,"length1":16,"length2":26}]],"length":157,"saved":false}
