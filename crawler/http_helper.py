@@ -49,7 +49,6 @@ def get_html(url, cache=True, retry_seconds = 1, proxy = False):
 class ProxyProvider(object):
     def __init__(self):
         self.proxy_src_url = 'http://51dai.li/http_anonymous.html'
-        self.get_proxies(refresh=False)
 
     def grab_proxies_from_src_html(self, html):
         self.proxies_list = []
@@ -62,20 +61,20 @@ class ProxyProvider(object):
             port = str(tds[2].text)
             self.proxies_list.append((ip, port))
 
-    def get_proxies(self, refresh):
+    def load_proxies(self, refresh):
         src_html = get_html(self.proxy_src_url, cache=not refresh)
         self.grab_proxies_from_src_html(src_html)
         self.endless_list = self.gen_proxy_iterator()
 
     def gen_proxy_iterator(self):
         i = 0
-        length = len(self.proxies_list)
         while True:
-            ip, port = self.proxies_list[i%length]
+            ip, port = self.proxies_list[i%len(self.proxies_list)]
             yield {"http": "%s:%s"%(ip, port), "https": "%s:%s"%(ip, port)}
             i += 1
 
 g_pp = ProxyProvider()
+g_pp.load_proxies(refresh=False)
 
 class FakeResponse(object):
     def __init__(self, status, text):
@@ -87,16 +86,19 @@ def request_by_proxy(url):
         'User-Agent':
             'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36'}
     testing_url = 'http://www.baidu.com/'
+    proxy_tried = 0
     for proxies in g_pp.endless_list:
+        if proxy_tried>len(g_pp.proxies_list):
+            g_pp.load_proxies(refresh=True)
         try:
-            print proxies
-            # proxy = urllib2.ProxyHandler({'http': '222.187.222.118:8080'})
+            # print proxies
             proxy = urllib2.ProxyHandler(proxies)
             opener = urllib2.build_opener(proxy)
             urllib2.install_opener(opener)
             try:
                 r = urllib2.urlopen(testing_url)
             except Exception as e:
+                proxy_tried += 1
                 continue
             r = urllib2.urlopen(url)
             return FakeResponse( r.getcode(), unicode(r.read(), 'gbk') )
