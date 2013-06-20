@@ -103,6 +103,8 @@ def etao_f2j(src):
         dst.append(uchar)
     return ''.join(dst)
 
+
+
 if __name__ == '__main__':
     a = '无聊的发财头发实际飞地政地震法则翔飞信干部专案项目管理五月花输入法狗学习猴子后宫后果如果家产加餐信息产业增强技术商用终端程序日历'
     #a = unicode(a,'utf8').encode('gbk')
