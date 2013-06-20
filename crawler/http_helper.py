@@ -87,7 +87,7 @@ def request_by_proxy(url):
     headers = {
         'User-Agent':
             'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36'}
-    testing_url = 'http://www.google.com'
+    testing_url = 'http://www.baidu.com/'
     for proxies in g_proxies_list:
         try:
             print proxies
