@@ -16,9 +16,14 @@ def f2j_example():
     su = etao_f2j(u)
     print su #su is jianti
 
+def f2j_test():
+    ju = u'库巴雅诗兰黛经典六件套全网最低价166，完爆其它网站了！'
+    print etao_f2j(ju)
+
 
 def main():
-    f2j_example()
+    f2j_test()
+    # f2j_example()
     pass
 
 

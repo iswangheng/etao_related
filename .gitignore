@@ -44,3 +44,6 @@ pyenv
 
 # log files
 .log
+
+# http cache
+http-cache
