@@ -101,7 +101,7 @@ def request_by_proxy(url):
                 proxy_tried += 1
                 continue
             r = urllib2.urlopen(url)
-            return FakeResponse( r.getcode(), unicode(r.read(), 'gbk') )
+            return FakeResponse(r.getcode(), unicode(r.read(), 'gbk', errors='ignore'))
 
             # requests.get(url, proxies=proxies, headers=headers)
             # resp = requests.get(url)
