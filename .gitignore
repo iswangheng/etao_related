@@ -40,3 +40,7 @@ nosetests.xml
 
 # ve
 pyenv
+
+
+# log files
+.log
