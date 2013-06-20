@@ -18,14 +18,15 @@ html_cache_ldb = leveldb.LevelDB(HTTP_CACHE_PATH)
 CACHE_VALID = datetime.timedelta(days=100)
 HTTP_RETRY_LIMIT = 5
 
-def get_html(url, cache=True, retry_seconds = 1, proxy = False):
+
+def get_html(url, cache=True, retry_seconds=1, proxy=False):
     cache_key = 'html-'+url
     try:
         cached = json.loads(html_cache_ldb.Get(cache_key))
     except KeyError as e:
         cached = {}
     now = datetime.datetime.now()
-    if cache and cached and now - parse(cached['time'])<CACHE_VALID:
+    if cache and cached and now - parse(cached['time']) < CACHE_VALID:
         # print 'cache get', url
         return cached['html']
     else:
@@ -39,7 +40,7 @@ def get_html(url, cache=True, retry_seconds = 1, proxy = False):
             return resp.text
         else:
             print 'wrong', resp.status_code
-            if retry_seconds>HTTP_RETRY_LIMIT:
+            if retry_seconds > HTTP_RETRY_LIMIT:
                 raise Exception('server error')
             print 'sleep and retry..'
             time.sleep(retry_seconds)
@@ -69,17 +70,19 @@ class ProxyProvider(object):
     def gen_proxy_iterator(self):
         i = 0
         while True:
-            ip, port = self.proxies_list[i%len(self.proxies_list)]
-            yield {"http": "%s:%s"%(ip, port), "https": "%s:%s"%(ip, port)}
+            ip, port = self.proxies_list[i % len(self.proxies_list)]
+            yield {"http": "%s:%s" % (ip, port), "https": "%s:%s" % (ip, port)}
             i += 1
 
 g_pp = ProxyProvider()
 g_pp.load_proxies(refresh=False)
 
+
 class FakeResponse(object):
     def __init__(self, status, text):
         self.status_code = status
         self.text = text
+
 
 def request_by_proxy(url):
     headers = {
@@ -88,7 +91,7 @@ def request_by_proxy(url):
     testing_url = 'http://www.baidu.com/'
     proxy_tried = 0
     for proxies in g_pp.endless_list:
-        if proxy_tried>len(g_pp.proxies_list):
+        if proxy_tried > len(g_pp.proxies_list):
             g_pp.load_proxies(refresh=True)
         try:
             # print proxies
@@ -122,17 +125,3 @@ if __name__ == '__main__':
     main()
     main()
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 from http_helper import get_html
 from jft import etao_f2j
 
-__author__ = 'chin'
+__author__ = 'chenzhao'
+
 
 def f2j_example():
     url = 'http://etao.com'
@@ -15,6 +16,7 @@ def f2j_example():
     print u #u is fanti
     su = etao_f2j(u)
     print su #su is jianti
+
 
 def f2j_test():
     ju = u'库巴雅诗兰黛经典六件套全网最低价166，完爆其它网站了！'
