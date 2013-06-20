@@ -113,14 +113,15 @@ def request_by_proxy(url):
 
 def main():
     url = 'http://jsonip.com'
+    url = 'http://etao.com'
     html = get_html(url, cache=False, proxy=True)
     print html
 
 if __name__ == '__main__':
     main()
-    # main()
-    # main()
-    # main()
+    main()
+    main()
+    main()
 
 
 
