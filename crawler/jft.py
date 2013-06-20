@@ -77,6 +77,32 @@ def f2j(sourceEncoding,destinationEncoding,sourceString):
         return unicode(sourceString,sourceEncoding).encode(destinationEncoding)
     return ''.join(des)
 
+
+
+
+def is_cn_char(uchar):
+    return uchar >= u'\u4e00' and uchar<=u'\u9fa5'
+def is_alphabeta(uchar):
+    return (uchar >= u'\u0041' and uchar<=u'\u005a') or (uchar >= u'\u0061' and uchar<=u'\u007a')
+def is_white(uchar):
+    return uchar in u' \t\n\r'
+def is_number(uchar):
+    return uchar in u'0123456789[]{}()*&^%$#@!~`<>,./?'
+
+def etao_f2j(src):
+    dst = []
+    for uchar in src:
+        if is_cn_char(uchar):
+            print uchar, '->',
+            utf8_char = f2j('gbk','utf8', uchar.encode('gbk'))
+            uchar = unicode(utf8_char, 'utf8')
+            print uchar
+            # else:
+        #     if not is_alphabeta(uchar) and not is_white(uchar) and not is_number(uchar):
+        #         print uchar
+        dst.append(uchar)
+    return ''.join(dst)
+
 if __name__ == '__main__':
     a = '无聊的发财头发实际飞地政地震法则翔飞信干部专案项目管理五月花输入法狗学习猴子后宫后果如果家产加餐信息产业增强技术商用终端程序日历'
     #a = unicode(a,'utf8').encode('gbk')
