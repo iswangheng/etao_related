@@ -85,7 +85,7 @@ def test_visit_comment():
 
 
 def test_get_phone_urls():
-    init_url = INIT_URL
+    init_url = ''
     phone_urls = get_phone_urls(init_url)
     print phone_urls
 
@@ -93,7 +93,7 @@ def test_get_phone_urls():
 def main():
     print 'hello from master.py'
     #@todo: main
-    # test_pos_neg_url()
+    test_pos_neg_url()
     # test_visit_comment()
     # test_get_phone_urls()
     logger.info('test logger, haha, LOL, hello logger world!')

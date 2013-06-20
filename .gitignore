@@ -42,7 +42,7 @@ nosetests.xml
 pyenv
 
 # log files
-.log
+*.log
 
 # http cache
 http-cache
