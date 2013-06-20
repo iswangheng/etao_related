@@ -1,20 +1,43 @@
 # coding:utf-8
+import logging
+import os
+from logging import handlers
+from ConfigParser import ConfigParser
 from bs4 import BeautifulSoup
 from http_helper import get_html
+
 
 __author__ = 'swarm'
 
 
+logger = logging.getLogger("Crawler")
+hdlr = logging.handlers.RotatingFileHandler(filename='crawler.log', maxBytes=20480000,
+                                            backupCount=10)
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+logger.addHandler(hdlr)
+logger.setLevel(logging.INFO)
+
+config_filename = os.path.join('.', 'crawler_config.ini')
+config = ConfigParser()
+config.read(config_filename)
+
+
 def get_phone_urls(init_url):
-    """ will get all the phones urls according to the init url
+    """ get all the phones urls according to the init url
+    :param init_url:
     """
-    pass
+    init_page = get_html(init_url)
+    init_soup = BeautifulSoup(init_page)
+    urls = []
+    return urls
 
 
 def get_pos_neg_url(phone_url):
-    """ will get both positive comment url
+    """ get both positive comment url
                  and negative comment url
                  according to the phone url
+    :param phone_url:
     """
     phone_html = get_html(phone_url)
     phone_soup = BeautifulSoup(phone_html)
@@ -36,15 +59,17 @@ def get_pos_neg_url(phone_url):
 
 
 def visit_comment_page(comment_url):
-    """ will visit the comment url page
+    """ visit the comment url page
         UNTIL there is no more [next page]
+    :param comment_url:
     """
     comment_html = get_html(comment_url)
     comment_soup = BeautifulSoup(comment_html)
     next_page_tag = comment_soup.find("a", {"class": "page-next"})
-    if not next_page_tag:
+    if next_page_tag:
         next_page_url = next_page_tag.get('href')
         print next_page_url
+        visit_comment_page(next_page_url)
     else:
         print 'NO MORE NEXT PAGE'
 
@@ -52,21 +77,29 @@ def visit_comment_page(comment_url):
 def test_pos_neg_url():
     phone_url = 'http://s.etao.com/item/8184790.html?spm=1002.8.0.50.VtduKf&sku=3call&tab=comment#J_detail_tabs_label'
     pos_url, neg_url = get_pos_neg_url(phone_url)
-    print "", pos_url
-    print neg_url
+    print "pos_url: ", pos_url
+    print "neg_url: ", neg_url
 
 
 def test_visit_comment():
     # comment_url = "http://dianping.etao.com/popup-comment-list-8184790-1-0-1-1.htm?wordId="
-    comment_url = "http://dianping.etao.com/popup-comment-list-8184790-1-0-1-1.htm?page=809&wordId="
+    # comment_url = "http://dianping.etao.com/popup-comment-list-8184790-1-0-1-1.htm?page=809&wordId="
+    comment_url = "http://dianping.etao.com/popup-comment-list-8184790-1-0-3-1.htm?wordId="
     visit_comment_page(comment_url)
+
+
+def test_get_phone_urls():
+    init_url = INIT_URL
+    phone_urls = get_phone_urls(init_url)
+    print phone_urls
 
 
 def main():
     print 'hello from master.py'
     #@todo: main
-    test_visit_comment()
-    pass
+    # test_pos_neg_url()
+    # test_visit_comment()
+    test_get_phone_urls()
 
 if __name__ == '__main__':
     main()
