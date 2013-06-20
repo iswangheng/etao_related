@@ -1,7 +1,7 @@
 # coding:utf-8
 import logging
 import os
-from logging import handlers
+import logging.config
 from ConfigParser import ConfigParser
 from bs4 import BeautifulSoup
 from http_helper import get_html
@@ -10,13 +10,9 @@ from http_helper import get_html
 __author__ = 'swarm'
 
 
-logger = logging.getLogger("Crawler")
-hdlr = logging.handlers.RotatingFileHandler(filename='crawler.log', maxBytes=20480000,
-                                            backupCount=10)
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr)
-logger.setLevel(logging.INFO)
+logging.config.fileConfig('logging.conf')
+# create logger
+logger = logging.getLogger('Crawler')
 
 config_filename = os.path.join('.', 'crawler_config.ini')
 config = ConfigParser()
@@ -99,7 +95,8 @@ def main():
     #@todo: main
     # test_pos_neg_url()
     # test_visit_comment()
-    test_get_phone_urls()
+    # test_get_phone_urls()
+    logger.info('test logger, haha, LOL, hello logger world!')
 
 if __name__ == '__main__':
     main()
