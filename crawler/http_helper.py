@@ -46,37 +46,36 @@ def get_html(url, cache=True, retry_seconds = 1, proxy = False):
             return get_html(url, cache, retry_seconds+2, proxy)
 
 
-def get_proxies_list():
-    proxies_list = []
-    # secret = {"v":"3", "m":"4", "a":"2", "l":"9", "q":"0", "b":"5", "i":"7", "w":"6", "r":"8", "c":"1", "+":""}
-    # listtb = soup.find(id='proxylisttb')
-    # ptable = listtb.find_all('table')[-1]
+class ProxyProvider(object):
+    def __init__(self):
+        self.proxy_src_url = 'http://51dai.li/http_anonymous.html'
+        self.get_proxies(refresh=False)
 
-    src_html = get_html('http://51dai.li/http_anonymous.html')
-    soup = BeautifulSoup(src_html)
-    listtb = soup.find(id='tb')
-    ptable = listtb.find_all('table')[0]
+    def grab_proxies_from_src_html(self, html):
+        self.proxies_list = []
+        soup = BeautifulSoup(html)
+        listtb = soup.find(id='tb')
+        ptable = listtb.find_all('table')[0]
+        for tr in ptable.find_all('tr')[1:]:
+            tds = tr.find_all('td')
+            ip = str(tds[1].text)
+            port = str(tds[2].text)
+            self.proxies_list.append((ip, port))
 
-    for tr in ptable.find_all('tr')[1:]:
-        # m = re.match('(.+)document\.write\(\"\:\"(.+)\)', tr.find('td').text)
-        # ip = str(m.group(1))
-        # port = str(''.join(map(lambda c: secret[c], m.group(2))))
-        # print ip, port
-        tds = tr.find_all('td')
-        ip = str(tds[1].text)
-        port = str(tds[2].text)
-        proxies = {
-            "http": "%s:%s"%(ip, port),
-            "https": "%s:%s"%(ip, port),
-            }
-        proxies_list.append(proxies)
-    i = 0
-    length = len(proxies_list)
-    while True:
-        yield proxies_list[i%length]
-        i += 1
+    def get_proxies(self, refresh):
+        src_html = get_html(self.proxy_src_url, cache=not refresh)
+        self.grab_proxies_from_src_html(src_html)
+        self.endless_list = self.gen_proxy_iterator()
 
-g_proxies_list = get_proxies_list()
+    def gen_proxy_iterator(self):
+        i = 0
+        length = len(self.proxies_list)
+        while True:
+            ip, port = self.proxies_list[i%length]
+            yield {"http": "%s:%s"%(ip, port), "https": "%s:%s"%(ip, port)}
+            i += 1
+
+g_pp = ProxyProvider()
 
 class FakeResponse(object):
     def __init__(self, status, text):
@@ -88,7 +87,7 @@ def request_by_proxy(url):
         'User-Agent':
             'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36'}
     testing_url = 'http://www.baidu.com/'
-    for proxies in g_proxies_list:
+    for proxies in g_pp.endless_list:
         try:
             print proxies
             # proxy = urllib2.ProxyHandler({'http': '222.187.222.118:8080'})
@@ -111,16 +110,15 @@ def request_by_proxy(url):
 
 
 def main():
-    url = 'http://etao.com'
+    url = 'http://jsonip.com'
     html = get_html(url, cache=False, proxy=True)
     print html
-    # r = request_by_proxy(url)
-    # print r.text
-    pass
-
 
 if __name__ == '__main__':
     main()
+    # main()
+    # main()
+    # main()
 
 
 
