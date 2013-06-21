@@ -20,6 +20,9 @@ config_filename = os.path.join('.', 'crawler_config.ini')
 config = ConfigParser()
 config.read(config_filename)
 
+CACHE = config.get('crawler', 'http-cache')
+PROXY = config.get('crawler', 'proxy')
+
 
 def get_phone_urls(init_url):
     """ get all the phones urls according to the init url
@@ -34,7 +37,7 @@ def get_phone_urls(init_url):
 
 
 def single_page_urls(url):
-    single_page = get_html(url, proxy=True, cache=True)
+    single_page = get_html(url, proxy=PROXY, cache=CACHE)
     single_page_soup = BeautifulSoup(single_page, 'lxml')
     products = single_page_soup.findAll("tr", {"class": "product-listitem"})
     pre_str = "http://s.etao.com"
@@ -70,11 +73,11 @@ class PhoneCrawler(threading.Thread):
                      according to the phone url
         :param phone_url:
         """
-        phone_html = get_html(phone_url, proxy=True)
+        phone_html = get_html(phone_url, proxy=PROXY, cache=CACHE)
         phone_soup = BeautifulSoup(phone_html)
         j_comment_div = phone_soup.find("div", {"id": "J_comment"})
         j_comment_url = j_comment_div.get('data-url')
-        phone_comment_html = get_html(j_comment_url, proxy=True)
+        phone_comment_html = get_html(j_comment_url, proxy=PROXY, cache=CACHE)
         phone_comment_soup = BeautifulSoup(phone_comment_html)
         phone_filter_div = phone_comment_soup.find("div", {"class": "comment-filter"})
         pos_url = neg_url = ''
@@ -92,7 +95,7 @@ class PhoneCrawler(threading.Thread):
             UNTIL there is no more [next page]
         :param comment_url:
         """
-        comment_html = get_html(comment_url, proxy=True)
+        comment_html = get_html(comment_url, proxy=PROXY, cache=CACHE)
         comment_soup = BeautifulSoup(comment_html)
         next_page_tag = comment_soup.find("a", {"class": "page-next"})
         next_page_url = None
