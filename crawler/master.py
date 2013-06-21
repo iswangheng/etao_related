@@ -65,7 +65,6 @@ class PhoneCrawler(threading.Thread):
         threading.Thread.__init__(self)
         self.num = num
         self.phone_url = phone_url
-        pass
 
     def get_pos_neg_url(self, phone_url):
         """ get both positive comment url
@@ -92,7 +91,6 @@ class PhoneCrawler(threading.Thread):
 
     def visit_comment_page(self, comment_url):
         """ visit the comment url page
-            UNTIL there is no more [next page]
         :param comment_url:
         """
         comment_html = get_html(comment_url, proxy=PROXY, cache=CACHE)
@@ -101,18 +99,19 @@ class PhoneCrawler(threading.Thread):
         next_page_url = None
         if next_page_tag:
             next_page_url = next_page_tag.get('href')
-            logger.info('next_page_url: %s' % str(next_page_url))
             print next_page_url
         else:
             print 'NO MORE NEXT PAGE'
         return next_page_url
 
     def all_comment_pages(self, comment_url):
-        count = 10
+        MAX_COUNT = 10
+        count = MAX_COUNT
         while 1:
             if (not comment_url) or (0 == count):
                 break
             comment_url = self.visit_comment_page(comment_url)
+            logger.info('#%d Thread: %d left' % (self.num, count))
             count -= 1
 
     def test_pos_neg_url(self):
@@ -156,6 +155,7 @@ class PhoneCrawler(threading.Thread):
         self.all_comment_pages(pos_url)
         print 'neg ' * 10
         self.all_comment_pages(neg_url)
+        logger.info('#%d Thread: DONE!!!!!!!!!' % (self.num, ))
 
 
 def main():
@@ -163,16 +163,16 @@ def main():
     init_url = config.get('crawler', 'init_url')
     all_phone_urls = get_phone_urls(init_url)
     index = 0
-    crawler_nums = 36
-    while (index + crawler_nums - 1) < len(all_phone_urls):
+    CRAWLER_NUMS = 36
+    while (index + CRAWLER_NUMS - 1) < len(all_phone_urls):
         print '-' * 20
         print 'index: ', index
-        crawlers = [PhoneCrawler(i, all_phone_urls[index+i]) for i in range(crawler_nums)]
+        crawlers = [PhoneCrawler(i, all_phone_urls[index+i]) for i in range(CRAWLER_NUMS)]
         for crawler in crawlers:
             crawler.start()
         for crawler in crawlers:
             crawler.join()
-        index += crawler_nums
+        index += CRAWLER_NUMS
 
 
 if __name__ == '__main__':
