@@ -163,28 +163,15 @@ def main():
     init_url = config.get('crawler', 'init_url')
     all_phone_urls = get_phone_urls(init_url)
     index = 0
-    crawler_nums = 6
+    crawler_nums = 36
     while (index + crawler_nums - 1) < len(all_phone_urls):
         print '-' * 20
         print 'index: ', index
-        a = PhoneCrawler(0, all_phone_urls[index+0])
-        b = PhoneCrawler(1, all_phone_urls[index+1])
-        c = PhoneCrawler(2, all_phone_urls[index+2])
-        d = PhoneCrawler(3, all_phone_urls[index+3])
-        e = PhoneCrawler(4, all_phone_urls[index+4])
-        f = PhoneCrawler(5, all_phone_urls[index+5])
-        a.start()
-        b.start()
-        c.start()
-        d.start()
-        e.start()
-        f.start()
-        a.join()
-        b.join()
-        c.join()
-        d.join()
-        e.join()
-        f.join()
+        crawlers = [PhoneCrawler(i, all_phone_urls[index+i]) for i in range(crawler_nums)]
+        for crawler in crawlers:
+            crawler.start()
+        for crawler in crawlers:
+            crawler.join()
         index += crawler_nums
 
 
