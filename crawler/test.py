@@ -1,7 +1,8 @@
 # coding:utf-8
 from bs4 import BeautifulSoup
-from http_helper import get_html
-from jft import etao_f2j
+import varys
+# from http_helper import get_html
+# from jft import etao_f2j
 
 __author__ = 'chenzhao'
 
@@ -23,8 +24,15 @@ def f2j_test():
     print etao_f2j(ju)
 
 
+def afunc(content, args):
+    print args
+    print content
+
 def main():
-    f2j_test()
+    for i in range(10):
+        varys.add_async(url='http://jsonip.com', callback=afunc, args = i)
+    print 'main end'
+    # f2j_test()
     # f2j_example()
     pass
 
