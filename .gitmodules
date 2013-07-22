@@ -1,0 +1,3 @@
+[submodule "crawler/varys"]
+	path = crawler/varys
+	url = https://github.com/chenzhao/varys.git
